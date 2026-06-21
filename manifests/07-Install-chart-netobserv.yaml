@@ -1,0 +1,36 @@
+# Instalacion del Network Observability Operator sin OLM
+# Alternativa a 07-netobserv-subscription.yaml cuando OLM / marketplace no esta disponible
+# (ej: CRC sin acceso a registry.redhat.io o community-operators caido)
+#
+# Requisito previo: tener el namespace netobserv creado (01-namespace.yaml)
+#
+# ----------------------------------------------------------------------------
+# OPCION A — release.yaml directo desde GitHub (recomendado para CRC/OCP 4.x)
+# ----------------------------------------------------------------------------
+# Verificar versiones disponibles en:
+#   https://github.com/netobserv/network-observability-operator/releases
+#
+# Instalar la ultima version estable:
+#
+#   oc apply -f https://github.com/netobserv/network-observability-operator/releases/latest/download/release.yaml
+#
+# O una version especifica (reemplazar vX.Y.Z):
+#
+#   oc apply -f https://github.com/netobserv/network-observability-operator/releases/download/vX.Y.Z/release.yaml
+#
+# Verificar que el CRD este disponible antes de aplicar 08-flowcollector.yaml:
+#
+#   oc get crd flowcollectors.flows.netobserv.io
+#   oc get pods -n netobserv-operator
+#
+# ----------------------------------------------------------------------------
+# OPCION B — via Helm
+# ----------------------------------------------------------------------------
+# Nota: puede no estar disponible para todas las versiones de OCP.
+#
+# helm repo add netobserv https://netobserv.github.io/network-observability-operator
+# helm repo update
+# helm install netobserv-operator netobserv/netobserv-operator \
+#   --namespace netobserv \
+#   --create-namespace \
+#   --wait
