@@ -1,0 +1,256 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 720" font-family="'Segoe UI', Arial, sans-serif">
+  <!-- Background -->
+  <rect width="1100" height="720" fill="#0f1117"/>
+
+  <!-- Title -->
+  <text x="550" y="38" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="bold">Network Observability Operator — Arquitectura OpenShift</text>
+  <text x="550" y="58" text-anchor="middle" fill="#8b9dc3" font-size="12">Basado en Red Hat Network Observability Operator (eBPF)</text>
+
+  <!-- ===== OPENSHIFT CLUSTER BOUNDARY ===== -->
+  <rect x="20" y="75" width="1060" height="570" rx="14" fill="none" stroke="#cc0000" stroke-width="2" stroke-dasharray="8,4"/>
+  <rect x="20" y="68" width="180" height="22" rx="4" fill="#cc0000"/>
+  <text x="110" y="83" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">OpenShift Cluster</text>
+
+  <!-- ===== WORKER NODE 1 ===== -->
+  <rect x="45" y="100" width="240" height="280" rx="10" fill="#1a1f2e" stroke="#3a4a6b" stroke-width="1.5"/>
+  <rect x="45" y="100" width="240" height="28" rx="10" fill="#232b42"/>
+  <rect x="45" y="118" width="240" height="10" rx="0" fill="#232b42"/>
+  <text x="165" y="119" text-anchor="middle" fill="#8b9dc3" font-size="11" font-weight="bold">Worker Node 1</text>
+
+  <!-- Pods Node 1 -->
+  <rect x="60" y="138" width="100" height="50" rx="6" fill="#0d3349" stroke="#1f6feb" stroke-width="1"/>
+  <text x="110" y="157" text-anchor="middle" fill="#79c0ff" font-size="10" font-weight="bold">Pod A</text>
+  <text x="110" y="171" text-anchor="middle" fill="#586069" font-size="9">app: frontend</text>
+  <text x="110" y="182" text-anchor="middle" fill="#586069" font-size="9">ns: demo-apps</text>
+
+  <rect x="175" y="138" width="100" height="50" rx="6" fill="#0d3349" stroke="#1f6feb" stroke-width="1"/>
+  <text x="225" y="157" text-anchor="middle" fill="#79c0ff" font-size="10" font-weight="bold">Pod B</text>
+  <text x="225" y="171" text-anchor="middle" fill="#586069" font-size="9">app: backend</text>
+  <text x="225" y="182" text-anchor="middle" fill="#586069" font-size="9">ns: demo-apps</text>
+
+  <!-- Traffic arrow between pods node 1 -->
+  <line x1="160" y1="163" x2="175" y2="163" stroke="#f0a500" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <polygon points="173,159 180,163 173,167" fill="#f0a500"/>
+
+  <!-- eBPF Agent Node 1 -->
+  <rect x="60" y="210" width="215" height="60" rx="8" fill="#1e2d1e" stroke="#3fb950" stroke-width="1.5"/>
+  <circle cx="80" cy="240" r="12" fill="#238636"/>
+  <text x="80" y="244" text-anchor="middle" fill="#ffffff" font-size="10" font-weight="bold">e</text>
+  <text x="145" y="234" text-anchor="middle" fill="#3fb950" font-size="11" font-weight="bold">eBPF Agent</text>
+  <text x="145" y="248" text-anchor="middle" fill="#586069" font-size="9">DaemonSet Pod</text>
+  <text x="145" y="260" text-anchor="middle" fill="#586069" font-size="9">Captura flows de red</text>
+
+  <!-- Capture arrow from pods to ebpf node1 -->
+  <line x1="110" y1="188" x2="110" y2="210" stroke="#3fb950" stroke-width="1.2" stroke-dasharray="3,2"/>
+  <polygon points="106,208 110,215 114,208" fill="#3fb950"/>
+  <line x1="225" y1="188" x2="225" y2="210" stroke="#3fb950" stroke-width="1.2" stroke-dasharray="3,2"/>
+  <polygon points="221,208 225,215 229,208" fill="#3fb950"/>
+
+  <!-- Metrics label node 1 -->
+  <rect x="60" y="288" width="215" height="80" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="167" y="307" text-anchor="middle" fill="#8b9dc3" font-size="10" font-weight="bold">Metricas capturadas</text>
+  <text x="75" y="324" fill="#586069" font-size="9">- src/dst IP, Puerto, Protocolo</text>
+  <text x="75" y="338" fill="#586069" font-size="9">- Bytes / Paquetes transferidos</text>
+  <text x="75" y="352" fill="#586069" font-size="9">- Latencia de red</text>
+  <text x="75" y="366" fill="#586069" font-size="9">- Namespace / Pod / Workload</text>
+
+  <!-- ===== WORKER NODE 2 ===== -->
+  <rect x="305" y="100" width="240" height="280" rx="10" fill="#1a1f2e" stroke="#3a4a6b" stroke-width="1.5"/>
+  <rect x="305" y="100" width="240" height="28" rx="10" fill="#232b42"/>
+  <rect x="305" y="118" width="240" height="10" rx="0" fill="#232b42"/>
+  <text x="425" y="119" text-anchor="middle" fill="#8b9dc3" font-size="11" font-weight="bold">Worker Node 2</text>
+
+  <!-- Pods Node 2 -->
+  <rect x="320" y="138" width="100" height="50" rx="6" fill="#0d3349" stroke="#1f6feb" stroke-width="1"/>
+  <text x="370" y="157" text-anchor="middle" fill="#79c0ff" font-size="10" font-weight="bold">Pod C</text>
+  <text x="370" y="171" text-anchor="middle" fill="#586069" font-size="9">app: database</text>
+  <text x="370" y="182" text-anchor="middle" fill="#586069" font-size="9">ns: demo-apps</text>
+
+  <rect x="435" y="138" width="100" height="50" rx="6" fill="#0d3349" stroke="#1f6feb" stroke-width="1"/>
+  <text x="485" y="157" text-anchor="middle" fill="#79c0ff" font-size="10" font-weight="bold">Pod D</text>
+  <text x="485" y="171" text-anchor="middle" fill="#586069" font-size="9">app: cache</text>
+  <text x="485" y="182" text-anchor="middle" fill="#586069" font-size="9">ns: demo-apps</text>
+
+  <!-- Traffic arrow between pods node 2 -->
+  <line x1="420" y1="163" x2="435" y2="163" stroke="#f0a500" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <polygon points="433,159 440,163 433,167" fill="#f0a500"/>
+
+  <!-- eBPF Agent Node 2 -->
+  <rect x="320" y="210" width="215" height="60" rx="8" fill="#1e2d1e" stroke="#3fb950" stroke-width="1.5"/>
+  <circle cx="340" cy="240" r="12" fill="#238636"/>
+  <text x="340" y="244" text-anchor="middle" fill="#ffffff" font-size="10" font-weight="bold">e</text>
+  <text x="405" y="234" text-anchor="middle" fill="#3fb950" font-size="11" font-weight="bold">eBPF Agent</text>
+  <text x="405" y="248" text-anchor="middle" fill="#586069" font-size="9">DaemonSet Pod</text>
+  <text x="405" y="260" text-anchor="middle" fill="#586069" font-size="9">Captura flows de red</text>
+
+  <!-- Capture arrow node2 -->
+  <line x1="370" y1="188" x2="370" y2="210" stroke="#3fb950" stroke-width="1.2" stroke-dasharray="3,2"/>
+  <polygon points="366,208 370,215 374,208" fill="#3fb950"/>
+  <line x1="485" y1="188" x2="485" y2="210" stroke="#3fb950" stroke-width="1.2" stroke-dasharray="3,2"/>
+  <polygon points="481,208 485,215 489,208" fill="#3fb950"/>
+
+  <!-- Metrics label node 2 -->
+  <rect x="320" y="288" width="215" height="80" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="427" y="307" text-anchor="middle" fill="#8b9dc3" font-size="10" font-weight="bold">Enriquecimiento K8s</text>
+  <text x="335" y="324" fill="#586069" font-size="9">- Nombre del Pod / Nodo</text>
+  <text x="335" y="338" fill="#586069" font-size="9">- Namespace / Deployment</text>
+  <text x="335" y="352" fill="#586069" font-size="9">- Labels de Kubernetes</text>
+  <text x="335" y="366" fill="#586069" font-size="9">- Direccion del flujo</text>
+
+  <!-- ===== FLOWLOGS PIPELINE ===== -->
+  <rect x="575" y="100" width="210" height="200" rx="10" fill="#1a1f2e" stroke="#6e40c9" stroke-width="1.5"/>
+  <rect x="575" y="100" width="210" height="28" rx="10" fill="#2d1f4e"/>
+  <rect x="575" y="118" width="210" height="10" fill="#2d1f4e"/>
+  <text x="680" y="119" text-anchor="middle" fill="#a78bfa" font-size="11" font-weight="bold">Network Observability Operator</text>
+
+  <!-- Flowlogs pipeline box -->
+  <rect x="592" y="138" width="178" height="70" rx="6" fill="#1e1b3a" stroke="#6e40c9" stroke-width="1"/>
+  <text x="681" y="158" text-anchor="middle" fill="#a78bfa" font-size="11" font-weight="bold">flowlogs-pipeline</text>
+  <text x="681" y="173" text-anchor="middle" fill="#586069" font-size="9">Deployment</text>
+  <text x="681" y="187" text-anchor="middle" fill="#586069" font-size="9">Procesa y enriquece flows</text>
+  <text x="681" y="199" text-anchor="middle" fill="#586069" font-size="9">Exporta a Loki / Prometheus</text>
+
+  <!-- FlowCollector CR -->
+  <rect x="592" y="220" width="178" height="65" rx="6" fill="#1a1f2e" stroke="#30363d" stroke-width="1"/>
+  <text x="681" y="238" text-anchor="middle" fill="#e3b341" font-size="10" font-weight="bold">FlowCollector CR</text>
+  <text x="681" y="252" text-anchor="middle" fill="#586069" font-size="9">kind: FlowCollector</text>
+  <text x="681" y="264" text-anchor="middle" fill="#586069" font-size="9">name: cluster</text>
+  <text x="681" y="276" text-anchor="middle" fill="#586069" font-size="9">agent.type: eBPF</text>
+
+  <!-- Prometheus metrics -->
+  <rect x="592" y="297" width="178" height="-(removed)"/>
+  <!-- Prometheus box -->
+  <rect x="575" y="312" width="210" height="52" rx="8" fill="#1a2a1a" stroke="#3fb950" stroke-width="1"/>
+  <text x="680" y="330" text-anchor="middle" fill="#3fb950" font-size="10" font-weight="bold">Prometheus Metrics</text>
+  <text x="680" y="345" text-anchor="middle" fill="#586069" font-size="9">netobserv_* metrics</text>
+  <text x="680" y="358" text-anchor="middle" fill="#586069" font-size="9">Puerto :9102</text>
+
+  <!-- Arrows from eBPF agents to flowlogs pipeline -->
+  <!-- Node 1 to pipeline -->
+  <line x1="275" y1="240" x2="575" y2="240" stroke="#a78bfa" stroke-width="2"/>
+  <polygon points="570,236 578,240 570,244" fill="#a78bfa"/>
+  <rect x="350" y="226" width="110" height="18" rx="4" fill="#1a1f2e"/>
+  <text x="405" y="238" text-anchor="middle" fill="#a78bfa" font-size="9">gRPC / IPFIX flows</text>
+
+  <!-- Node 2 to pipeline -->
+  <line x1="535" y1="240" x2="575" y2="240" stroke="#a78bfa" stroke-width="2"/>
+
+  <!-- ===== LOKI STACK ===== -->
+  <rect x="820" y="100" width="235" height="195" rx="10" fill="#1a1f2e" stroke="#f97316" stroke-width="1.5"/>
+  <rect x="820" y="100" width="235" height="28" rx="10" fill="#3d1f0a"/>
+  <rect x="820" y="118" width="235" height="10" fill="#3d1f0a"/>
+  <text x="937" y="119" text-anchor="middle" fill="#fb923c" font-size="11" font-weight="bold">Loki Stack</text>
+
+  <!-- LokiStack CR -->
+  <rect x="836" y="138" width="203" height="55" rx="6" fill="#2a1a0a" stroke="#f97316" stroke-width="1"/>
+  <text x="937" y="156" text-anchor="middle" fill="#fb923c" font-size="10" font-weight="bold">LokiStack CR</text>
+  <text x="937" y="170" text-anchor="middle" fill="#586069" font-size="9">size: 1x.extra-small</text>
+  <text x="937" y="183" text-anchor="middle" fill="#586069" font-size="9">mode: OpenshiftLogging</text>
+
+  <!-- MinIO -->
+  <rect x="836" y="205" width="96" height="75" rx="6" fill="#1f1a0a" stroke="#e3b341" stroke-width="1"/>
+  <text x="884" y="222" text-anchor="middle" fill="#e3b341" font-size="10" font-weight="bold">MinIO</text>
+  <text x="884" y="236" text-anchor="middle" fill="#586069" font-size="9">Object Storage</text>
+  <text x="884" y="249" text-anchor="middle" fill="#586069" font-size="9">Bucket: loki-chunks</text>
+  <text x="884" y="262" text-anchor="middle" fill="#586069" font-size="9">Local / S3-compat</text>
+  <text x="884" y="275" text-anchor="middle" fill="#586069" font-size="8">(prod: ODF / AWS S3)</text>
+
+  <!-- Loki Components -->
+  <rect x="943" y="205" width="96" height="75" rx="6" fill="#1a1a2e" stroke="#30363d" stroke-width="1"/>
+  <text x="991" y="222" text-anchor="middle" fill="#8b9dc3" font-size="10" font-weight="bold">Loki Pods</text>
+  <text x="991" y="236" text-anchor="middle" fill="#586069" font-size="9">Distributor</text>
+  <text x="991" y="249" text-anchor="middle" fill="#586069" font-size="9">Ingester</text>
+  <text x="991" y="262" text-anchor="middle" fill="#586069" font-size="9">Querier</text>
+  <text x="991" y="275" text-anchor="middle" fill="#586069" font-size="9">Query-frontend</text>
+
+  <!-- Arrow flowlogs to loki -->
+  <line x1="785" y1="175" x2="820" y2="175" stroke="#fb923c" stroke-width="2"/>
+  <polygon points="816,171 824,175 816,179" fill="#fb923c"/>
+  <rect x="787" y="158" width="34" height="18" rx="3" fill="#1a1f2e"/>
+  <text x="804" y="170" text-anchor="middle" fill="#fb923c" font-size="8">LogQL</text>
+
+  <!-- ===== OPENSHIFT CONSOLE PLUGIN ===== -->
+  <rect x="575" y="400" width="480" height="185" rx="10" fill="#1a1f2e" stroke="#1f6feb" stroke-width="1.5"/>
+  <rect x="575" y="400" width="480" height="28" rx="10" fill="#0d1f3c"/>
+  <rect x="575" y="418" width="480" height="10" fill="#0d1f3c"/>
+  <text x="815" y="419" text-anchor="middle" fill="#79c0ff" font-size="11" font-weight="bold">OpenShift Console — Network Observability Plugin</text>
+
+  <!-- Console views -->
+  <rect x="590" y="438" width="135" height="130" rx="6" fill="#0d1b2e" stroke="#1f6feb" stroke-width="1"/>
+  <text x="657" y="456" text-anchor="middle" fill="#79c0ff" font-size="10" font-weight="bold">Topology View</text>
+  <rect x="600" y="462" width="115" height="70" rx="3" fill="#0a1520"/>
+  <circle cx="630" cy="490" r="8" fill="#1f6feb" opacity="0.7"/>
+  <circle cx="665" cy="478" r="8" fill="#3fb950" opacity="0.7"/>
+  <circle cx="700" cy="495" r="8" fill="#f97316" opacity="0.7"/>
+  <line x1="638" y1="490" x2="657" y2="480" stroke="#8b9dc3" stroke-width="1"/>
+  <line x1="673" y1="480" x2="692" y2="493" stroke="#8b9dc3" stroke-width="1"/>
+  <text x="657" y="548" text-anchor="middle" fill="#586069" font-size="8">Grafo de dependencias</text>
+  <text x="657" y="559" text-anchor="middle" fill="#586069" font-size="8">entre workloads</text>
+
+  <rect x="740" y="438" width="135" height="130" rx="6" fill="#0d1b2e" stroke="#1f6feb" stroke-width="1"/>
+  <text x="807" y="456" text-anchor="middle" fill="#79c0ff" font-size="10" font-weight="bold">Traffic Flows</text>
+  <rect x="750" y="462" width="115" height="70" rx="3" fill="#0a1520"/>
+  <rect x="756" y="468" width="103" height="8" rx="2" fill="#1f6feb" opacity="0.6"/>
+  <rect x="756" y="480" width="80" height="8" rx="2" fill="#3fb950" opacity="0.5"/>
+  <rect x="756" y="492" width="95" height="8" rx="2" fill="#f97316" opacity="0.5"/>
+  <rect x="756" y="504" width="60" height="8" rx="2" fill="#a78bfa" opacity="0.5"/>
+  <rect x="756" y="516" width="90" height="8" rx="2" fill="#1f6feb" opacity="0.4"/>
+  <text x="807" y="548" text-anchor="middle" fill="#586069" font-size="8">Tabla de flows en</text>
+  <text x="807" y="559" text-anchor="middle" fill="#586069" font-size="8">tiempo real</text>
+
+  <rect x="890" y="438" width="150" height="130" rx="6" fill="#0d1b2e" stroke="#1f6feb" stroke-width="1"/>
+  <text x="965" y="456" text-anchor="middle" fill="#79c0ff" font-size="10" font-weight="bold">Overview Dashboard</text>
+  <rect x="900" y="462" width="130" height="70" rx="3" fill="#0a1520"/>
+  <!-- Mini bar chart -->
+  <rect x="910" y="507" width="12" height="18" fill="#1f6feb" opacity="0.7"/>
+  <rect x="926" y="498" width="12" height="27" fill="#3fb950" opacity="0.7"/>
+  <rect x="942" y="503" width="12" height="22" fill="#f97316" opacity="0.7"/>
+  <rect x="958" y="490" width="12" height="35" fill="#a78bfa" opacity="0.7"/>
+  <rect x="974" y="500" width="12" height="25" fill="#79c0ff" opacity="0.7"/>
+  <rect x="990" y="495" width="12" height="30" fill="#3fb950" opacity="0.5"/>
+  <text x="965" y="548" text-anchor="middle" fill="#586069" font-size="8">Top talkers, bytes/s,</text>
+  <text x="965" y="559" text-anchor="middle" fill="#586069" font-size="8">drops, latencias</text>
+
+  <!-- Arrow from loki to console -->
+  <line x1="937" y1="295" x2="937" y2="370" stroke="#79c0ff" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <line x1="937" y1="370" x2="815" y2="370" stroke="#79c0ff" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <line x1="815" y1="370" x2="815" y2="400" stroke="#79c0ff" stroke-width="1.5"/>
+  <polygon points="811,396 815,404 819,396" fill="#79c0ff"/>
+  <rect x="842" y="359" width="80" height="18" rx="3" fill="#1a1f2e"/>
+  <text x="882" y="371" text-anchor="middle" fill="#79c0ff" font-size="9">LogQL queries</text>
+
+  <!-- Admin user -->
+  <circle cx="67" cy="465" r="22" fill="#232b42" stroke="#3a4a6b" stroke-width="1.5"/>
+  <circle cx="67" cy="458" r="10" fill="#586069"/>
+  <path d="M45,487 Q67,475 89,487" fill="#586069"/>
+  <text x="67" y="500" text-anchor="middle" fill="#8b9dc3" font-size="10">Operador</text>
+  <text x="67" y="513" text-anchor="middle" fill="#586069" font-size="9">/ SRE</text>
+  <line x1="89" y1="465" x2="575" y2="500" stroke="#8b9dc3" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <polygon points="570,496 578,500 570,504" fill="#8b9dc3"/>
+  <text x="330" y="485" text-anchor="middle" fill="#8b9dc3" font-size="9">Accede via HTTPS</text>
+
+  <!-- ===== LEGEND ===== -->
+  <rect x="45" y="405" width="510" height="70" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="300" y="422" text-anchor="middle" fill="#8b9dc3" font-size="10" font-weight="bold">Leyenda</text>
+  <line x1="60" y1="440" x2="90" y2="440" stroke="#a78bfa" stroke-width="2"/>
+  <text x="95" y="444" fill="#8b9dc3" font-size="9">Flow de datos de red (gRPC)</text>
+  <line x1="60" y1="455" x2="90" y2="455" stroke="#3fb950" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <text x="95" y="459" fill="#8b9dc3" font-size="9">Captura eBPF (kernel space)</text>
+  <line x1="220" y1="440" x2="250" y2="440" stroke="#fb923c" stroke-width="2"/>
+  <text x="255" y="444" fill="#8b9dc3" font-size="9">Escritura en Loki (logs)</text>
+  <line x1="220" y1="455" x2="250" y2="455" stroke="#79c0ff" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="255" y="459" fill="#8b9dc3" font-size="9">Query LogQL (lectura)</text>
+  <rect x="380" y="432" width="14" height="14" rx="3" fill="#e3b341" opacity="0.7"/>
+  <text x="400" y="443" fill="#8b9dc3" font-size="9">Custom Resource (CR)</text>
+  <rect x="380" y="449" width="14" height="14" rx="3" fill="#238636" opacity="0.7"/>
+  <text x="400" y="460" fill="#8b9dc3" font-size="9">eBPF DaemonSet (kernel hook)</text>
+
+  <!-- ===== NAMESPACE LABELS ===== -->
+  <text x="165" y="390" text-anchor="middle" fill="#30363d" font-size="9">ns: open-cluster-management-agent</text>
+  <text x="680" y="390" text-anchor="middle" fill="#30363d" font-size="9">ns: netobserv</text>
+  <text x="937" y="390" text-anchor="middle" fill="#30363d" font-size="9">ns: netobserv / openshift-logging</text>
+
+  <!-- Bottom note -->
+  <text x="550" y="655" text-anchor="middle" fill="#30363d" font-size="10">Referencia: docs.openshift.com/container-platform/latest/network_observability/installing-operators.html</text>
+  <text x="550" y="670" text-anchor="middle" fill="#30363d" font-size="10">Requiere OpenShift 4.12+ | Loki Operator | Network Observability Operator</text>
+</svg>

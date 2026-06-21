@@ -1,0 +1,209 @@
+---
+# =============================================================================
+# APP 1: Frontend (nginx) — recibe trafico HTTP externo y lo reenvía al backend
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: demo-netobserv
+  labels:
+    app: frontend
+    tier: web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+        tier: web
+    spec:
+      containers:
+        - name: nginx
+          image: nginxinc/nginx-unprivileged:latest
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: demo-netobserv
+spec:
+  selector:
+    app: frontend
+  ports:
+    - port: 8080
+      targetPort: 8080
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: frontend
+  namespace: demo-netobserv
+spec:
+  to:
+    kind: Service
+    name: frontend
+  port:
+    targetPort: 8080
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+
+---
+# =============================================================================
+# APP 2: Backend API (httpbin) — responde requests HTTP con datos de prueba
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-api
+  namespace: demo-netobserv
+  labels:
+    app: backend-api
+    tier: api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend-api
+  template:
+    metadata:
+      labels:
+        app: backend-api
+        tier: api
+    spec:
+      containers:
+        - name: httpbin
+          image: kennethreitz/httpbin:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-api
+  namespace: demo-netobserv
+spec:
+  selector:
+    app: backend-api
+  ports:
+    - port: 80
+      targetPort: 80
+
+---
+# =============================================================================
+# APP 3: Base de datos (redis) — trafico TCP interno para analizar
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cache-redis
+  namespace: demo-netobserv
+  labels:
+    app: cache-redis
+    tier: cache
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cache-redis
+  template:
+    metadata:
+      labels:
+        app: cache-redis
+        tier: cache
+    spec:
+      containers:
+        - name: redis
+          image: redis:7-alpine
+          ports:
+            - containerPort: 6379
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cache-redis
+  namespace: demo-netobserv
+spec:
+  selector:
+    app: cache-redis
+  ports:
+    - port: 6379
+      targetPort: 6379
+
+---
+# =============================================================================
+# APP 4: Traffic generator — genera trafico continuo entre los servicios
+# Util para ver flows en tiempo real en la consola de OpenShift
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traffic-generator
+  namespace: demo-netobserv
+  labels:
+    app: traffic-generator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: traffic-generator
+  template:
+    metadata:
+      labels:
+        app: traffic-generator
+    spec:
+      containers:
+        - name: generator
+          image: curlimages/curl:latest
+          command:
+            - sh
+            - -c
+            - |
+              while true; do
+                echo "[$(date)] Hitting backend-api /get"
+                curl -s http://backend-api.demo-netobserv.svc/get > /dev/null
+                sleep 2
+                echo "[$(date)] Hitting backend-api /headers"
+                curl -s http://backend-api.demo-netobserv.svc/headers > /dev/null
+                sleep 2
+                echo "[$(date)] Hitting backend-api /ip"
+                curl -s http://backend-api.demo-netobserv.svc/ip > /dev/null
+                sleep 3
+                echo "[$(date)] Hitting frontend"
+                curl -s http://frontend.demo-netobserv.svc:8080 > /dev/null
+                sleep 5
+              done
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi

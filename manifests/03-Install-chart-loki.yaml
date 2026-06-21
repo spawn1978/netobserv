@@ -1,0 +1,6 @@
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+oc new-project loki
+oc adm policy add-scc-to-user anyuid -z default -n loki
+oc adm policy add-scc-to-user anyuid -z loki -n loki
+helm install loki grafana/loki-stack   --namespace loki   --set promtail.enabled=true   --set loki.persistence.enabled=true   --set loki.persistence.size=10Gi

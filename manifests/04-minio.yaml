@@ -1,0 +1,93 @@
+---
+# MinIO — object storage local para Loki (solo para entornos de desarrollo/lab)
+# En produccion reemplazar con: AWS S3, ODF (OpenShift Data Foundation), Azure Blob, GCS
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio
+  namespace: netobserv
+  labels:
+    app: minio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      containers:
+        - name: minio
+          image: quay.io/minio/minio:latest
+          args:
+            - server
+            - /data
+            - --console-address
+            - ":9001"
+          env:
+            - name: MINIO_ROOT_USER
+              value: minioadmin
+            - name: MINIO_ROOT_PASSWORD
+              value: minioadmin
+          ports:
+            - containerPort: 9000
+              name: api
+            - containerPort: 9001
+              name: console
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+      volumes:
+        - name: data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio
+  namespace: netobserv
+spec:
+  selector:
+    app: minio
+  ports:
+    - port: 9000
+      name: api
+      targetPort: 9000
+    - port: 9001
+      name: console
+      targetPort: 9001
+---
+# Job que crea el bucket requerido por Loki al iniciar
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: minio-create-bucket
+  namespace: netobserv
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      initContainers:
+        - name: wait-minio
+          image: busybox
+          command: ['sh', '-c', 'until nc -z minio.netobserv.svc 9000; do echo waiting for minio; sleep 2; done']
+      containers:
+        - name: create-bucket
+          image: quay.io/minio/mc:latest
+          command:
+            - sh
+            - -c
+            - |
+              mc alias set myminio http://minio.netobserv.svc:9000 minioadmin minioadmin
+              mc mb myminio/loki-chunks || true
+              mc mb myminio/loki-ruler || true
+              mc mb myminio/loki-admin || true

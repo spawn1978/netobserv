@@ -1,0 +1,8 @@
+---
+# Namespace principal donde se instalan todos los componentes de Network Observability
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: netobserv
+  labels:
+    openshift.io/cluster-monitoring: "true"

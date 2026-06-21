@@ -1,0 +1,24 @@
+---
+# NOTA: Este manifiesto NO requiere ser aplicado cuando se instala con community-operators.
+#
+# El namespace "openshift-operators" existe por defecto en OpenShift y ya cuenta con
+# un OperatorGroup global llamado "global-operators" que cubre todos los namespaces.
+#
+# El namespace "openshift-operators-redhat" solo existe en clusters con suscripcion
+# activa de Red Hat y es usado exclusivamente para operators certificados de Red Hat.
+#
+# Para versiones comunitarias (sin licencia Red Hat), todos los operators se instalan
+# directamente en "openshift-operators" usando "community-operators" como source.
+#
+# Verificar que el OperatorGroup global existe:
+#   oc get operatorgroup -n openshift-operators
+#   Debe aparecer: global-operators
+#
+# Si por alguna razon no existe, crear con:
+#
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: global-operators
+  namespace: openshift-operators
+spec: {}

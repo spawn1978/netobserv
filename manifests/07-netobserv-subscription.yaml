@@ -1,0 +1,19 @@
+---
+# Suscripcion al Network Observability Operator — version comunitaria
+#
+# Verificar canal disponible en tu version de OCP:
+#   oc get packagemanifest netobserv-operator -n openshift-marketplace \
+#     -o jsonpath='{.status.channels[*].name}'
+#
+# Nota: "community-operators" no requiere suscripcion Red Hat.
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: netobserv-operator
+  namespace: openshift-operators
+spec:
+  channel: community
+  installPlanApproval: Automatic
+  name: netobserv-operator
+  source: community-operators
+  sourceNamespace: openshift-marketplace

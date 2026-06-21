@@ -1,0 +1,26 @@
+---
+# LokiStack — instancia de Loki gestionada por el Loki Operator
+# size: 1x.extra-small es el minimo para labs (1 replica de cada componente)
+# Opciones de size: 1x.extra-small | 1x.small | 1x.medium | 1x.large
+apiVersion: loki.grafana.com/v1
+kind: LokiStack
+metadata:
+  name: loki
+  namespace: netobserv
+spec:
+  size: 1x.extra-small
+  storage:
+    schemas:
+      - version: v13
+        effectiveDate: "2024-01-01"
+    secret:
+      name: lokistack-s3-credentials
+      type: s3
+  storageClassName: crc-csi-hostpath-provisioner   # Cambiar al StorageClass disponible en tu cluster
+  tenancy:
+    mode: OpenshiftLogging     # Modo requerido por Network Observability
+  limits:
+    global:
+      retention:
+        days: 7
+  managementState: Managed

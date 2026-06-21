@@ -1,0 +1,102 @@
+---
+# FlowCollector — CR principal que configura toda la recoleccion de flujos de red
+# Es un recurso cluster-scoped (name: cluster es obligatorio)
+apiVersion: flows.netobserv.io/v1beta2
+kind: FlowCollector
+metadata:
+  name: cluster
+spec:
+  namespace: netobserv
+
+  # Modelo de despliegue: Direct (agents envian directo al pipeline)
+  deploymentModel: Direct
+
+  # Agente eBPF — se despliega como DaemonSet en cada nodo
+  agent:
+    type: eBPF
+    ebpf:
+      # Sampling: 1 = 100% de paquetes (costoso en produccion), 50 = 1 de cada 50
+      sampling: 1
+      # privileged: false requiere que el nodo tenga kernel >= 5.8 con BTF habilitado
+      # Si el nodo falla, cambiar a true
+      privileged: false
+      imagePullPolicy: IfNotPresent
+      logLevel: info
+      # Interfaces a monitorear (vacio = todas)
+      interfaces: []
+      # Interfaces a excluir
+      excludeInterfaces:
+        - lo
+      resources:
+        requests:
+          memory: 50Mi
+          cpu: 100m
+        limits:
+          memory: 800Mi
+          cpu: "1"
+      # Features adicionales de eBPF
+      features:
+        - PacketDrop       # Detecta paquetes descartados por iptables/nftables
+        - DNSTracking      # Resuelve nombres DNS en los flows
+        - FlowRTT          # Calcula Round Trip Time por flujo
+
+  # Procesador de flows — enriquece y reenvía a Loki
+  processor:
+    logLevel: info
+    resources:
+      requests:
+        memory: 100Mi
+        cpu: 100m
+      limits:
+        memory: 800Mi
+        cpu: "1"
+    # Agrega metadatos de Kubernetes a cada flow
+    addZone: false
+    metrics:
+      server:
+        port: 9102
+      includeList:
+        - node_ingress_bytes_total
+        - workload_ingress_bytes_total
+        - workload_egress_bytes_total
+        - namespace_flows_total
+
+  # Configuracion de Loki como backend de almacenamiento
+  # Modo Manual: apunta directo al servicio Helm (loki-stack en namespace loki)
+  loki:
+    mode: Manual
+    manual:
+      ingesterUrl: http://loki.loki.svc.cluster.local:3100
+      querierUrl: http://loki.loki.svc.cluster.local:3100
+      statusUrl: http://loki.loki.svc.cluster.local:3100
+      tenantID: fake
+      authToken: Disabled
+
+  # Plugin de consola de OpenShift
+  consolePlugin:
+    register: true
+    logLevel: info
+    portNaming:
+      enable: true
+      portNames:
+        "3306": mysql
+        "5432": postgresql
+        "6379": redis
+        "8080": http-alt
+        "8443": https-alt
+        "9200": elasticsearch
+    quickFilters:
+      - name: Aplicaciones
+        filter:
+          src_namespace!: "openshift-,netobserv,kube-"
+          dst_namespace!: "openshift-,netobserv,kube-"
+        default: true
+      - name: Infra
+        filter:
+          src_namespace: "openshift-,netobserv,kube-"
+    resources:
+      requests:
+        memory: 50Mi
+        cpu: 100m
+      limits:
+        memory: 100Mi
